@@ -1,4 +1,5 @@
 function defaultHandler(response) {
+
     if (response.status !== 200) {
         if (response.message) {
             if (typeof response.message === 'string') {
@@ -18,6 +19,10 @@ function defaultHandler(response) {
             return;
         }
         window.location.href = redirect;
+    }
+    try{
+        document.getElementById("submit").disabled = false;
+    }catch (e) {
     }
 }
 function xhrOnLoad(callback, xhr){
@@ -40,7 +45,7 @@ function request(url, data, method, callback){
     if (typeof data === 'object') {
         data = JSON.stringify(data);
     }
-    xhr.open(method, url, false);
+    xhr.open(method, url, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     const token = getToken();
     if (token) {
@@ -79,15 +84,20 @@ function setToken(token) {
     }
 }
 
-function loginByForm() {
+function loginByForm(button) {
+    button.disabled = 'disabled';
     post('/api/login', {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
         remember: document.getElementById('remember').checked// ???
+    }, function(response){
+        defaultHandler(response);
+        button.disabled = false;
     });
 }
 
-function registerByForm() {
+function registerByForm(button) {
+    button.disabled = 'disabled';
     post('/api/register', {
         name: document.getElementById('username').value,
         email: document.getElementById('email_address').value,
@@ -95,6 +105,9 @@ function registerByForm() {
         password: document.getElementById('password').value,
         password_confirmation: document.getElementById('password_confirmation').value,
         remember: true// ????
+    }, function(response){
+        defaultHandler(response);
+        button.disabled = false;
     });
 }
 

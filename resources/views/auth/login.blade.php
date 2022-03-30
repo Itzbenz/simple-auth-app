@@ -34,8 +34,7 @@
 
                             </form>
                             <div class="d-grid mx-auto">
-                                <button onclick="loginByForm()" class="btn btn-dark btn-block">Sign in
-                                </button>
+                                <button id="submit" onclick="loginByForm(this);" class="btn btn-dark btn-block">Sign in</button>
                             </div>
                             Don't have an account? <a href="{{ route("register") }}">Register</a>
                         </div>

@@ -44,8 +44,8 @@
                                         <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
                                     @endif
                                 </div>
-                                <div class="d-grid mx-auto">
-                                    <button onclick="registerByForm()" class="btn btn-dark btn-block">Sign up</button>
+                                <div id="submit" class="d-grid mx-auto">
+                                    <button onclick="registerByForm(this)" class="btn btn-dark btn-block">Sign up</button>
                                 </div>
                             </form>
                             Have an account? <a href="{{ route('login') }}">Login</a>
