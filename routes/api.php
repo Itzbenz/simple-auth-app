@@ -99,6 +99,7 @@ Route::post('register', function (Request $request) {
 
 
 Route::get("user", function (Request $request) {
+    //middleware is overrated
     $token = $request->header('Authorization');
     $user = User::where('token', $token)->first();
     if ($user) {
