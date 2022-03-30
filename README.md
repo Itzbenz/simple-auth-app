@@ -6,6 +6,12 @@
 
 
 
+# Note
+- have docker
+- have docker-composer
+- have git
+- have php
+- have composer
 
 ```bash
 sudo apt -y install php php-{cli,gd,mysql,pdo,mbstring,tokenizer,bcmath,xml,fpm,curl,zip}
