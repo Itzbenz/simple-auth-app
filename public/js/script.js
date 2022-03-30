@@ -113,7 +113,8 @@ function registerByForm(button) {
 
 
 
-function setDashboardContent() {
+function setDashboardContent(button) {
+    button.disabled = 'disabled';
     const username = document.getElementById("username");
     const email = document.getElementById("email");
     const phone = document.getElementById("phone");
@@ -133,16 +134,22 @@ function setDashboardContent() {
             } else {
                 defaultHandler(response);
             }
+            button.disabled = false;
         });
     }else{
      alert("No Token");
     }
 }
 
-function refreshDashboardContent() {
-
+function refreshDashboardContent(button) {
+    if(button) {
+        button.disabled = 'disabled';
+    }
     get('/api/user',
         function (response) {
+            if(button) {
+                button.disabled = false;
+            }
             if (response.status === 200) {
                 const username = document.getElementById("username");
                 const email = document.getElementById("email");
@@ -153,6 +160,7 @@ function refreshDashboardContent() {
                 return
             }
             defaultHandler(response);
+
         });
 
 }

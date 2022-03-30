@@ -18,9 +18,10 @@
         </div>
 
     </form>
-    <button class="btn btn-primary" onclick="setDashboardContent()">Submit</button>
-    <button class="btn btn-primary" onclick="refreshDashboardContent()">Refresh</button>
+    <button class="btn btn-primary" onclick="setDashboardContent(this)">Submit</button>
+    <button class="btn btn-primary" onclick="refreshDashboardContent(this)">Refresh</button>
     <button id="logout" class="btn btn-primary" onclick="
+                       this.disabled = true;
                        localStorage.removeItem('token');
                        sessionStorage.removeItem('token');
                        window.location.href = '/';" >Logout</button>
