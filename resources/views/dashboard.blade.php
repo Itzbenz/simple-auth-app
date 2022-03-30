@@ -1,21 +1,6 @@
 @extends('app')
 @section('content')
-<nav class="navbar navbar-light navbar-expand-lg mb-5" style="background-color: #e3f2fd;">
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                    <li class="nav-item" id="login">
-                        <a class="nav-link" href="{{route("login")}}" >Login</a>
-                    </li>
-                   <li class="nav-item" id="logout">
-                       <a class="nav-link" onclick="
-                       localStorage.removeItem('token');
-                       sessionStorage.removeItem('token');
-                       window.location.href = '/';" >Logout</a>
-                   </li>
-            </ul>
-        </div>
-</nav>
 <!-- list username, email, phone -->
 <div class="container" id="content">
     <form>
@@ -35,7 +20,12 @@
     </form>
     <button class="btn btn-primary" onclick="setDashboardContent()">Submit</button>
     <button class="btn btn-primary" onclick="refreshDashboardContent()">Refresh</button>
-</div>
+    <button id="logout" class="btn btn-primary" onclick="
+                       localStorage.removeItem('token');
+                       sessionStorage.removeItem('token');
+                       window.location.href = '/';" >Logout</button>
 
+</div>
+<a id="login" class="btn btn-primary" href="{{route("login")}}" >Login</a>
 @endsection
 

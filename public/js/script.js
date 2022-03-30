@@ -20,8 +20,18 @@ function defaultHandler(response) {
         window.location.href = redirect;
     }
 }
-
-function post(url, data, callback) {
+function xhrOnLoad(callback, xhr){
+    return function() {
+        try {
+            let res = JSON.parse(xhr.responseText);
+            res.status = xhr.status;
+            callback(res);
+        } catch (e) {
+            document.innerHTML = xhr.responseText;
+        }
+    }
+}
+function request(url, data, method, callback){
     const xhr = new XMLHttpRequest();
     if (!callback || typeof callback !== 'function') {
         callback = defaultHandler;
@@ -30,15 +40,30 @@ function post(url, data, callback) {
     if (typeof data === 'object') {
         data = JSON.stringify(data);
     }
-    xhr.open('POST', url, true);
+    xhr.open(method, url, false);
     xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onload = function () {
-        let res = JSON.parse(xhr.responseText);
-        res.status = xhr.status;
-        callback(res);
-    };
+    const token = getToken();
+    if (token) {
+        xhr.setRequestHeader('Authorization', token);
+    }
+    xhr.onload = xhrOnLoad(callback, xhr);
     xhr.send(data);
+
 }
+function post(url, data, callback) {
+    request(url, data, 'POST', callback);
+}
+
+function get(url, callback) {
+    request(url, null, 'GET', callback);
+}
+
+//mmm should merge these function
+function put(url, data, callback) {
+    request(url, data, 'PUT', callback);
+}
+
+
 
 function getToken() {
     return sessionStorage.getItem('token') || localStorage.getItem('token');
@@ -73,50 +98,6 @@ function registerByForm() {
     });
 }
 
-function get(url, callback) {
-    const xhr = new XMLHttpRequest();
-    if (!callback || typeof callback !== 'function') {
-        callback = defaultHandler;
-    }
-
-    xhr.open('GET', url, true);
-    const token = getToken();
-    if (token) {
-        xhr.setRequestHeader('Authorization', token);
-    }
-    xhr.onload = function () {
-        let res = JSON.parse(xhr.responseText);
-        res.status = xhr.status;
-        callback(res);
-    };
-    xhr.send();
-}
-
-//mmm should merge these function
-function put(url, data, callback) {
-    const xhr = new XMLHttpRequest();
-    if (!callback || typeof callback !== 'function') {
-        callback = defaultHandler;
-    }
-
-    //convert data to json if it is not already
-    if (typeof data === 'object') {
-        data = JSON.stringify(data);
-    }
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    const token = getToken();
-    if (token) {
-        xhr.setRequestHeader('Authorization', token);
-    }
-    xhr.onload = function () {
-        let res = JSON.parse(xhr.responseText);
-        res.status = xhr.status;
-        callback(res);
-    };
-    xhr.send(data);
-}
-
 
 
 function setDashboardContent() {
@@ -141,7 +122,7 @@ function setDashboardContent() {
             }
         });
     }else{
-     alert("No Token");   
+     alert("No Token");
     }
 }
 
@@ -172,6 +153,8 @@ if (getToken()) {
 } else {
     document.getElementById("login").hidden = false;
     document.getElementById("logout").hidden = true;
+    document.getElementById("content").innerHTML = "<h1>Please Login</h1>";
+    window.location.href = "/login";
 }
 
 
