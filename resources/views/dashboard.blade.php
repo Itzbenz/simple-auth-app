@@ -10,6 +10,7 @@
                    <li class="nav-item" id="logout">
                        <a class="nav-link" onclick="
                        localStorage.removeItem('token');
+                       sessionStorage.removeItem('token');
                        window.location.href = '/';" >Logout</a>
                    </li>
             </ul>
