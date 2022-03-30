@@ -58,7 +58,7 @@ function loginByForm() {
     post('/api/login', {
         email: document.getElementById('email').value,
         password: document.getElementById('password').value,
-        remember: document.getElementById('remember').checked
+        remember: document.getElementById('remember').checked// ???
     });
 }
 
@@ -69,7 +69,7 @@ function registerByForm() {
         phone: document.getElementById('phone').value,
         password: document.getElementById('password').value,
         password_confirmation: document.getElementById('password_confirmation').value,
-        remember: true
+        remember: true// ????
     });
 }
 
@@ -92,6 +92,7 @@ function get(url, callback) {
     xhr.send();
 }
 
+//mmm should merge these function
 function put(url, data, callback) {
     const xhr = new XMLHttpRequest();
     if (!callback || typeof callback !== 'function') {
@@ -116,6 +117,8 @@ function put(url, data, callback) {
     xhr.send(data);
 }
 
+
+
 function setDashboardContent() {
     const username = document.getElementById("username");
     const email = document.getElementById("email");
@@ -137,6 +140,8 @@ function setDashboardContent() {
                 defaultHandler(response);
             }
         });
+    }else{
+     alert("No Token");   
     }
 }
 
@@ -158,7 +163,7 @@ function refreshDashboardContent() {
 
 }
 
-
+//assuming we are in /dashboard
 if (getToken()) {
     document.getElementById("login").hidden = true;
     document.getElementById("logout").hidden = false;
