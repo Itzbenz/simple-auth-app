@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,49 +19,122 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-    if(Auth::attempt($credentials)){
-        $request->session()->regenerate();
-        return response()->json(['success' => true]);
-    }else{
-        return response()->json(['success' => false]);
+function login(Request  $request){
+    try {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => $e->errors(),
+        ], 401);
+    }
+    $user = User::where('email', $request->email)->first();
+    if (!$user) {
+        return response()->json([
+            'message' => 'User not found',
+        ], 401);
+    }
+    if (!Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Password is incorrect',
+        ], 401);
+    }
+    $token = Str::random(60);
+    $user->token = $token;
+    $user->save();
+
+    $remember = (bool)$request->remember;
+    //Auth user, if using browser
+    if(!Auth::attempt($credentials, $remember)){
+        return response()->json([
+            'message' => 'User not found',
+        ], 401);
     }
 
+    return response([
+        'message' => 'Login successful',
+        'token' => $token,
+        'redirect' => '/',
+    ], 200);
+
+}
+
+Route::post('login', function (Request $request) {
+    return login($request);
 });
 
 
-Route::post('/register', function (Request $request) {
-    $cred = $request->validate([
-        'username' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
-        'phone' => ['required', 'string', 'min:8', 'max:15'],
-    ]);
+Route::post('register', function (Request $request) {
+    try {
+        $cred = $request->validate([
+            'username' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'phone' => ['required', 'string', 'min:8', 'max:15'],
+        ]);
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => $e->errors(),
+        ], 401);
+    }
     //check if user exists
     $user = User::where('email', $request->email)->first();
     if($user){
-        return response()->json(['fail' => 'User already exists'], 401);
+        return response([
+            'message' => 'User already exists'
+        ], 400);
     }
-    $user = new User();
-    $user->username = $request->username;
-    $user->email = $request->email;
-    $user->password = Hash::make($request->password);
-    $user->phone = $request->phone;
-    $user->save();
-    return response()->json(['success' => true]);
+    $user = User::create([
+        'username' => $request->username,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'phone' => $request->phone,
+        'token' => Str::random(60),
+    ]);
+    return login($request);
 });
 
 
 
-Route::get("/user", function (Request $request) {
-    $user = auth()->user();
+Route::get("user", function (Request $request) {
+    $token = $request->header('Authorization');
+    $user = User::where('token', $token)->first();
     if ($user) {
-        return response()->json(['success' => $user], 200);
+        return response([
+            'data' => $user
+        ]);
     } else {
-        return response()->json(['error' => 'User not logged in'], 401);
+        return response([
+            'message' => 'User not found/Token invalid'
+        ], 401);
+    }
+});
+
+Route::put("user", function (Request $request) {
+    $token = $request->header('Authorization');
+    $user = User::where('token', $token)->first();
+    if ($user) {
+        //validate request
+        try {
+             $request->validate([
+                'username' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'phone' => ['required', 'string', 'min:8', 'max:15'],
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => $e->errors(),
+            ], 401);
+        }
+        $user->update($request->all());
+        return response([
+            'data' => $user
+        ]);
+    } else {
+        return response([
+            'message' => 'User not found/Token invalid'
+        ], 401);
     }
 });
