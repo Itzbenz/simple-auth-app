@@ -18,7 +18,7 @@ use Illuminate\Support\Str;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+//used by login and registeration
 function login(Request  $request){
     try {
         $credentials = $request->validate([
@@ -36,18 +36,16 @@ function login(Request  $request){
             'message' => 'User not found',
         ], 401);
     }
-    if (!Hash::check($request->password, $user->password)) {
+    if (!Hash::check($request->password, $user->password)) {// redundant gonna get checked again
         return response()->json([
             'message' => 'Password is incorrect',
         ], 401);
     }
     $token = Str::random(60);
-    $user->token = $token;
+    $user->token = $token;//invalidate previous token
     $user->save();
-
-    $remember = (bool)$request->remember;
-    //Auth user, if using browser
-    if(!Auth::attempt($credentials, $remember)){
+    
+    if(!Auth::attempt($credentials)){
         return response()->json([
             'message' => 'User not found',
         ], 401);
@@ -55,23 +53,24 @@ function login(Request  $request){
 
     return response([
         'message' => 'Login successful',
-        'token' => $token,
+        'token' => $token,//please save it
         'redirect' => '/',
     ], 200);
 
 }
 
+//yes
 Route::post('login', function (Request $request) {
     return login($request);
 });
 
-
+//mmmmm
 Route::post('register', function (Request $request) {
     try {
         $cred = $request->validate([
             'username' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],//atleast 1 uppercase, lowercase, greek letter, crylic
             'phone' => ['required', 'string', 'min:8', 'max:15'],
         ]);
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -84,14 +83,14 @@ Route::post('register', function (Request $request) {
     if($user){
         return response([
             'message' => 'User already exists'
-        ], 400);
+        ], 400);//what
     }
     $user = User::create([
         'username' => $request->username,
         'email' => $request->email,
         'password' => Hash::make($request->password),
         'phone' => $request->phone,
-        'token' => Str::random(60),
+        'token' => Str::random(60),//good 
     ]);
     return login($request);
 });
