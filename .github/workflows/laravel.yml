@@ -25,7 +25,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/bake-action@master
         with:
           push: true
-          tags: itzbenz/simple-auth-app:latest
