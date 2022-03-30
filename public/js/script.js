@@ -166,16 +166,18 @@ function refreshDashboardContent(button) {
 }
 
 //assuming we are in /dashboard
-if (getToken()) {
-    document.getElementById("login").hidden = true;
-    document.getElementById("logout").hidden = false;
-    refreshDashboardContent()
+if(document.location.pathname === '/dashboard'){
+    if (getToken()) {
+        document.getElementById("login").hidden = true;
+        document.getElementById("logout").hidden = false;
+        refreshDashboardContent()
 
-} else {
-    document.getElementById("login").hidden = false;
-    document.getElementById("logout").hidden = true;
-    document.getElementById("content").innerHTML = "<h1>Please Login</h1>";
-    window.location.href = "/login";
+    } else {
+        document.getElementById("login").hidden = false;
+        document.getElementById("logout").hidden = true;
+        document.getElementById("content").innerHTML = "<h1>Please Login</h1>";
+        window.location.href = "/login";
+    }
 }
 
 
