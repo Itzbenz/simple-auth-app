@@ -6,6 +6,8 @@ RUN apt-get update
 RUN apt -y install mariadb-server
 RUN service mysql start
 RUN mysql -u root -e "create database laravel"; 
+RUN echo "[mysqld]" >> /etc/mysql/my.cnf
+RUN echo "bind-address=0.0.0.0" >> /etc/mysql/my.cnf
 RUN git clone https://github.com/Itzbenz/simple-auth-app.git \
     && cd simple-auth-app \
     && composer install \
