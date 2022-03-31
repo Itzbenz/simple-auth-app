@@ -4,10 +4,9 @@ ENV MYSQL_ALLOW_EMPTY_PASSWORD 1
 
 #Get PHP
 RUN apt-get update
-RUN apt -y install php php-{cli,gd,mysql,pdo,mbstring,tokenizer,bcmath,xml,fpm,curl,zip}
-
-#Make database
-RUN mysql -u root -e "create database laravel";
+RUN apt list | grep ^php
+RUN apt -y install php
+RUN apt -y install php-cli php-gd php-mysql php-pdo php-mbstring php-tokenizer php-bcmath php-xml php-fpm php-curl php-zip
 
 #Install composer
 RUN curl -sS https://getcomposer.org/installer | php \
@@ -17,9 +16,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 COPY . .
 #Prepare stuff
 RUN composer install
-RUN php artisan migrate:fresh
 
 #Less goooo
 EXPOSE 8000
-
 ENTRYPOINT ["php", "artisan", "serve"]
