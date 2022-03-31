@@ -1,22 +1,25 @@
-FROM php:latest
+FROM mysql:latest
 
+ENV MYSQL_ALLOW_EMPTY_PASSWORD 1
+
+#Get PHP
+RUN apt-get update
+RUN apt -y install php php-{cli,gd,mysql,pdo,mbstring,tokenizer,bcmath,xml,fpm,curl,zip}
+
+#Make database
+RUN mysql -u root -e "create database laravel";
+
+#Install composer
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
-RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash 
-RUN apt-get update
-RUN apt -y install mariadb-server 
-RUN /etc/init.d/mysql start
-RUN mysql -u root -e "create database laravel";
-
-#hack
-RUN echo "[mysqld]" >> /etc/mysql/my.cnf
-RUN echo "bind-address=0.0.0.0" >> /etc/mysql/my.cnf
-
+#Copy Code
 COPY . .
+#Prepare stuff
 RUN composer install
 RUN php artisan migrate:fresh
 
+#Less goooo
 EXPOSE 8000
 
 ENTRYPOINT ["php", "artisan", "serve"]
