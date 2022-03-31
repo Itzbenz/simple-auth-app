@@ -19,7 +19,7 @@ RUN apt -y install php-cli php-gd php-mysql php-pdo php-mbstring php-tokenizer p
 
 
 #Install composer
-RUN apt -y install git default-mysql-client
+RUN apt -y install git default-mysql-client curl
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
