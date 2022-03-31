@@ -14,8 +14,8 @@ ENV DB_DATABASE $DB_DATABASE
 
 #Install php
 RUN apt-get update
-RUN apt -y install php
-RUN apt -y install php-cli php-gd php-mysql php-pdo php-mbstring php-tokenizer php-bcmath php-xml php-fpm php-curl php-zip
+RUN apt -y install php7.3
+RUN apt -y install php7.3-cli php7.3-gd php7.3-mysql php7.3-pdo php7.3-mbstring php7.3-tokenizer php7.3-bcmath php7.3-xml php7.3-fpm php7.3-curl php7.3-zip
 
 
 #Install composer
