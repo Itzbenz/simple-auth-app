@@ -3,6 +3,7 @@ FROM php:latest
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
+RUN curl -sS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash 
 RUN apt-get update
 RUN apt -y install mariadb-server 
 RUN /etc/init.d/mysql start
