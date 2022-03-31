@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\CustomAuthController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+try{
+    $table = DB::select('SHOW TABLES');
+    if(count($table) == 0){
+        Artisan::call('migrate:install');
+    }
+}catch (\Exception $e){
+
+}
 
 Route::get('login',array('as'=>'login',function(){
     return view('auth.login');
@@ -22,10 +32,13 @@ Route::get('login',array('as'=>'login',function(){
 Route::get('register', array('as'=>'register',function(){
     return view('auth.registration');
 }));
+
 Route::get('dashboard', function () {
     return view('dashboard');
 });
 Route::get("/", function () {
     return redirect('dashboard');
 });
+
+//sike
 

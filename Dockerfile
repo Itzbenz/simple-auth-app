@@ -7,7 +7,7 @@ RUN apt-get update
 RUN apt list | grep ^php
 RUN apt -y install php
 RUN apt -y install php-cli php-gd php-mysql php-pdo php-mbstring php-tokenizer php-bcmath php-xml php-fpm php-curl php-zip
-
+RUN apt -y install curl
 #Install composer
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
@@ -16,7 +16,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
 #Prepare stuff
 COPY . .
 RUN composer install
+RUN chmod +x ./run.sh
 
 #Less goooo
 EXPOSE 8000
-ENTRYPOINT ["php", "artisan", "serve"]
+ENTRYPOINT ["bash", "./run.sh"]
