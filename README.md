@@ -45,6 +45,6 @@ or
 ### Note
 - have docker
 ```bash
-docker run -p 3306:3306 -d -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:latest 
-docker run -p 8000:8000 itzbenz/simple-auth-app:latest
+docker run -p 3306:3306 -d -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_ROOT_HOST="%" mysql:latest 
+docker run -p 8000:8000 --network="host" itzbenz/simple-auth-app:latest
 ```

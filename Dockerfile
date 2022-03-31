@@ -1,8 +1,21 @@
 FROM php:latest
 
+ARG DB_HOST=localhost
+ARG DB_PORT=3306
+ARG DB_USERNAME=laravel
+ARG DB_PASSWORD=""
+ARG DB_DATABASE=laravel
+
+ENV DB_HOST $DB_HOST
+ENV DB_PORT $DB_PORT
+ENV DB_USERNAME $DB_USERNAME
+ENV DB_PASSWORD $DB_PASSWORD
+ENV DB_DATABASE $DB_DATABASE
+
+
 #Install composer
 RUN apt-get update
-RUN apt -y install git mysql-client
+RUN apt -y install git default-mysql-client
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
