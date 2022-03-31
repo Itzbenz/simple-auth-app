@@ -12,9 +12,9 @@ RUN apt -y install php-cli php-gd php-mysql php-pdo php-mbstring php-tokenizer p
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 
-#Copy Code
-COPY . .
+
 #Prepare stuff
+COPY . .
 RUN composer install
 
 #Less goooo
