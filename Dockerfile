@@ -2,11 +2,10 @@ FROM php:latest
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
-    
+
 RUN apt-get update
 RUN apt -y install mariadb-server 
-RUN systemctl start mariadb.service \ 
-    && mysql -u root -e "create database laravel";
+RUN mysql -u root -e "create database laravel";
 
 #hack
 RUN echo "[mysqld]" >> /etc/mysql/my.cnf
