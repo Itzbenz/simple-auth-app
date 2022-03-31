@@ -3,7 +3,6 @@ FROM mysql:latest
 ENV MYSQL_ALLOW_EMPTY_PASSWORD 1
 
 #Get PHP
-RUN add-apt-repository ppa:ondrej/php
 RUN apt-get update
 RUN apt -y install php php-{cli,gd,mysql,pdo,mbstring,tokenizer,bcmath,xml,fpm,curl,zip}
 
