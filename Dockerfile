@@ -2,7 +2,7 @@ FROM php:latest
 
 #Install composer
 RUN apt-get update
-RUN apt -y install git
+RUN apt -y install git mysql-client
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/bin/composer
 

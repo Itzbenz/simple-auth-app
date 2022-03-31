@@ -1,4 +1,3 @@
-service mysql start
 mysql -u root -e "CREATE DATABASE IF NOT EXISTS laravel;"
 if [ ! -f init ]; then
     php artisan migrate:fresh;
