@@ -5,6 +5,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 RUN apt-get update
 RUN apt -y install mariadb-server 
+RUN apt -y install default-mysql-client
 RUN mysql -u root -e "create database laravel";
 
 #hack
