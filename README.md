@@ -45,6 +45,17 @@ or
 ### Note
 - have docker
 ```bash
-docker run --network="host" -d -e MYSQL_ALLOW_EMPTY_PASSWORD=yes mysql:latest 
+docker run -p 3306:3306 -d -e MYSQL_ALLOW_EMPTY_PASSWORD="1" -e MYSQL_ROOT_HOST="%" mysql:latest
 docker run --network="host" itzbenz/simple-auth-app:latest
 ```
+or
+
+### Note
+- have docker
+```bash
+docker build -t simple-auth-app .
+docker run -p 3306:3306 -d -e MYSQL_ALLOW_EMPTY_PASSWORD="1" -e MYSQL_ROOT_HOST="%" mysql:latest
+docker run --network="host" simple-auth-app
+```
+
+
