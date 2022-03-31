@@ -40,3 +40,10 @@ composer install
 php artisan migrate:fresh
 php artisan serve
 ```
+or
+
+### Note
+- have docker
+```bash
+docker run itzbenz/simple-auth-app:latest
+```
